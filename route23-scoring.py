@@ -166,23 +166,23 @@ merge
 
 
 test_data = TimeSeriesDataFrame.from_data_frame(merge, id_column="item_id", timestamp_column='datetime') #, timestamp_column=merge.index
-test_data = test_data.convert_frequency(freq='H', agg_numeric="max")
+test_data = test_data.convert_frequency(freq='h', agg_numeric="max")
 test_data.head()
 
 
 # In[14]:
 
 
-predictor = TimeSeriesPredictor.load('model/pompton_gage_autogluon')
+predictor = TimeSeriesPredictor.load('model/pompton_gage_autogluon', require_version_match=False)
 
 
-# In[15]:
+# In[16]:
 
 
 predictions = predictor.predict(test_data)
 
 
-# In[16]:
+# In[17]:
 
 
 item_id = 'pompton_gage'
