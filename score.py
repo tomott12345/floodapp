@@ -15,6 +15,9 @@ from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor
 import datetime as dt
 from datetime import timezone, timedelta
 
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+#import pytz
 
 
 # In[21]:
@@ -22,13 +25,18 @@ from datetime import timezone, timedelta
 
 timezone_offset = -5.0  # Eastern Standard Time (UTC−08:00)
 tzinfo = timezone(timedelta(hours=timezone_offset))
-current_dateTime = datetime.now(tzinfo)
+#now = datetime.now()
+#s2 = now.strftime("%Y-%M-%dT%H:%M:%S")
+#str(s2)
+
 
 # In[22]:
 
 
 begin_date = '2024-08-12T00:00:00.000-05:00'
-end_date = current_dateTime.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+end_date = '2024-08-14T10:00:00.000-05:00'
+#end_date = s2
+current_dateTime = datetime.now(tzinfo)
 
 
 # In[23]:
@@ -55,6 +63,8 @@ end_date = current_dateTime.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 #Read in raw stream guage data
 #pompton_plains = pd.read_csv('data/archive/pompton_plains.txt', sep='\t', skiprows=27)
 pompton_plains = pd.read_csv('https://nwis.waterservices.usgs.gov/nwis/iv/?sites=01388500&parameterCd=00065&startDT='+begin_date+'&endDT='+end_date+'&siteStatus=all&format=rdb', sep='\t', skiprows=26)
+
+print (pompton_plains)
 
 pompton_plains = pompton_plains.iloc[1: , :]
 pompton_plains['194446_00065'] = pompton_plains['194446_00065'].astype(float)
@@ -161,14 +171,14 @@ merge
 
 
 test_data = TimeSeriesDataFrame.from_data_frame(merge, id_column="item_id", timestamp_column='datetime') #, timestamp_column=merge.index
-test_data = test_data.convert_frequency(freq='H', agg_numeric="max")
+test_data = test_data.convert_frequency(freq='h', agg_numeric="max")
 test_data.head()
 
 
 # In[35]:
 
 
-predictor = TimeSeriesPredictor.load('./model/pompton_gage_autogluon', require_version_match=False)
+predictor = TimeSeriesPredictor.load('floodapp/model/pompton_gage_autogluon')
 
 
 # In[36]:
@@ -178,12 +188,6 @@ predictions = predictor.predict(test_data)
 
 
 # In[37]:
-
-
-# TimeSeriesDataFrame can also be loaded directly from a file
-#test_data = TimeSeriesDataFrame.from_path("https://autogluon.s3.amazonaws.com/datasets/timeseries/m4_hourly_subset/test.csv")
-
-#test_data = predictions
 
 item_id = 'pompton_gage'
 
@@ -205,13 +209,13 @@ plt.fill_between(
 plt.figtext(0.5, 0.01, "Note: Route 23 Typically Closes At Gage Height Of 16 feet", ha="center", fontsize=12, bbox={"facecolor":"orange", "alpha":0.5, "pad":5})
 plt.figtext(0.15, 0.15, 'Updated on: '+str(current_dateTime), ha='left', fontsize=10)
 plt.legend(loc = 'upper left');
-plt.savefig('./static/forecast.png')
+plt.savefig('floodapp/static/forecast.png')
 
 
 # In[38]:
 
 
-print("Forecast updated, ", current_dateTime)
+print(current_dateTime)
 
 
 # In[ ]:
