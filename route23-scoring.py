@@ -16,12 +16,6 @@ import datetime as dt
 from datetime import timezone, timedelta
 
 
-# In[ ]:
-
-
-
-
-
 # In[2]:
 
 
@@ -35,24 +29,6 @@ current_dateTime = datetime.now(tzinfo)
 
 begin_date = '2024-08-12T00:00:00.000-05:00'
 end_date = current_dateTime.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
 
 # In[4]:
@@ -176,13 +152,13 @@ test_data.head()
 predictor = TimeSeriesPredictor.load('model/pompton_gage_autogluon', require_version_match=False)
 
 
-# In[16]:
+# In[15]:
 
 
 predictions = predictor.predict(test_data)
 
 
-# In[17]:
+# In[16]:
 
 
 item_id = 'pompton_gage'
@@ -208,7 +184,7 @@ plt.legend(loc = 'upper left');
 plt.savefig('static/forecast.png')
 
 
-# In[18]:
+# In[17]:
 
 
 print('This job completed successfully on: ', current_dateTime)
